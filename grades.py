@@ -12,12 +12,16 @@ def readGradeFile(file):
     grades = open(file, "r")
     line = grades.readline()
     file_name = file.split(".")[0].rstrip()
+    if file_name[0] == "t":
+        component_name = file_name[0] + file_name[4]
+    else:
+        component_name = file_name[:2]
     # Store the maximum marks
-    maximum[file_name[:2]] = line.rstrip()
+    maximum[component_name] = line.rstrip()
     line = grades.readline()
     while line:
         data = line.split("|")
-        students[data[0]].addComponentBasedMarks(file_name[:2], data[1])
+        students[data[0]].addComponentBasedMarks(component_name, data[1])
         line = grades.readline()
     grades.close()
 
@@ -26,7 +30,7 @@ def readGradeFiles(files):
         readGradeFile(file)
 
 readClassFile("class.txt")
-files = ["a1.txt", "a2.txt", "project.txt", "t1.txt", "t2.txt"]
+files = ["a1.txt", "a2.txt", "project.txt", "test1.txt", "test2.txt"]
 readGradeFiles(files)
 calculateStudentGrades()
 
@@ -36,7 +40,7 @@ def displayMenu():
     "\n3> Display Standard Report" +
     "\n4> Sort by alternate column" +
     "\n5> Change Pass/Fail point" +
-    "\n6> Exit" )
+    "\n6> Exit\n" )
     options = {1: displayIndividualComponent, 2: displayAverageComponent,
             3: displayStandardReport, 4: displaySortedResults,
             5: changeClearingPoint, 6: exit}
@@ -47,7 +51,6 @@ def displayMenu():
         functionToCall = options[int(option)]
         functionToCall()
     input("\n::: Press Enter to Continue :::")
-    os.system('clear')
     calculateStudentGrades()
     displayMenu()
 

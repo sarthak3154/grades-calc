@@ -1,7 +1,7 @@
 import sys
 import operator
 
-grades = {0:"C", 1: "B-", 2: "B", 3: "B+", 4: "A-", 5: "A", 6: "A+"}
+grades = {0:"C", 1: "B-", 2: "B", 3: "B+", 4: "A-", 5: "A", 6: "A+", 7: "A+"}
 percentage = {"a1": 7.5, "a2": 7.5, "pr": 25, "t1": 30, "t2": 30}
 maximum = {}
 students = {}
@@ -18,8 +18,8 @@ class Student:
         total = 0
         for key in percentage:
             if hasattr(self, key):
-                total += round(float(vars(self)[key]/int(maximum.get(key))) * percentage.get(key), 1)
-        self.total = total
+                total += round(float(vars(self)[key]/int(maximum.get(key))) * percentage.get(key), 2)
+        self.total = round(total, 2)
 
     def calculateGrade(self, qualify_point):
         grade_range = int((100 - qualify_point)/7)
@@ -41,8 +41,6 @@ def displayIndividualComponent():
     for key, value in students.items():
         if hasattr(value, component_name):
             print(key + "\t" + value.last_name + ", " + value.first_name + "\t" + str(vars(value)[component_name]))
-        else:
-            print(key + "\t" + value.last_name + ", " + value.first_name)
 
 def displayAverageComponent():
     component = input("Enter Component Name: ")
@@ -54,7 +52,7 @@ def displayAverageComponent():
     average = round(sum/len(students), 2)
     print(component_name.upper() + " average: " + str(average) + "/" + maximum.get(component_name))
 
-def displayStandardReport(list=students.values()):
+def displayReport(list):
     print()
     print('{0:5} {1:6} {2:6}'.format("ID", "LN", "FN"), end="")
     print("A1\tA2\tPR\tT1\tT2\tGR\tFL")
@@ -68,16 +66,20 @@ def displayStandardReport(list=students.values()):
                  print("\t", end="")
         print(str(value.total) + "\t" + value.grade)
 
+def displayStandardReport():
+    list = sorted(students.values(), key=operator.attrgetter('id'))
+    displayReport(list)
+
 def displaySortedResults():
     sort_order = input("Enter the sorting order: LT (last name) and GR (numeric grade)\n")
     sort_order = sort_order.lower()
     sorted_students = []
     if sort_order == "lt":
         sorted_students = sorted(students.values(), key=operator.attrgetter('last_name'))
-        displayStandardReport(sorted_students)
+        displayReport(sorted_students)
     elif sort_order == "gr":
         sorted_students = sorted(students.values(), key=operator.attrgetter('total'))
-        displayStandardReport(sorted_students)
+        displayReport(sorted_students)
     else:
         print("Invalid Input.")
 
