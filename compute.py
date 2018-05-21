@@ -78,7 +78,7 @@ def displaySortedResults():
         sorted_students = sorted(students.values(), key=operator.attrgetter('last_name'))
         displayReport(sorted_students)
     elif sort_order == "gr":
-        sorted_students = sorted(students.values(), key=operator.attrgetter('total'))
+        sorted_students = sorted(students.values(), key=operator.attrgetter('total'), reverse=True)
         displayReport(sorted_students)
     else:
         print("Invalid Input.")
@@ -88,7 +88,7 @@ def changeClearingPoint():
     if clear_point.isalpha():
         print("Invalid Input.")
     else:
-        calculateStudentGrades(int(clear_point))
+        calculateStudentGrades(float(clear_point))
         displayStandardReport()
 
 def exit():
